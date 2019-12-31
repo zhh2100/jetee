@@ -255,7 +255,7 @@ $=$j=(function(){
 			timeout: 10000 //请求超时ms
 		};
 		for(var i in options)if(options[i]===undefined)delete(options[i]);		
-		Object.assign(opt, options); //直接合并对象,opt已有属性将会被options替换
+		Object.assign(opt, options); //合并对象到opt,有的替换  es6标准   要换
 		var abortTimeout = null;
 		var xhr = new XMLHttpRequest();
 		xhr.onreadystatechange = function () {
