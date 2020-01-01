@@ -254,7 +254,7 @@ class DB{
 	}
 
 	public static function table($table) {
-		return $GLOBALS['config']['db'][DB::id()]['tablepre'].$table;
+		return '`'.$GLOBALS['config']['db'][DB::id()]['tablepre'].$table.'`';
 	}
 	public static function tablepre() {
 		return $GLOBALS['config']['db'][DB::id()]['tablepre'];
