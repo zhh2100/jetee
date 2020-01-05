@@ -1,4 +1,16 @@
-$=$j=(function(){
+/*!
+ * jetee-jquery 1.0  简单易用加精简
+ * 功能仿jquery1.12.4  可以先用它做站，功能不够就用原版更换
+
+ * Author: jetee www.ma863.com
+ * Update: 2020-01-01
+ *
+ */
+(function (global, factory) {
+  typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
+  typeof define === 'function' && define.amd ? define("jquery",[],factory) :
+  (global = global || self, global.$ =global.jQuery = factory());
+}(this, function () {
 	var $,
 	// Support: Android<4.1, IE<9
 	// Make sure we trim BOM and NBSP
@@ -22,6 +34,29 @@ $=$j=(function(){
 				this[i] = nodeList[i];
 			}
 			return this;
+		},
+		log: function( obj ) {
+			console.log(obj);
+		},
+		type: function( obj ) {
+			return typeof obj;
+		},
+		isFunction: function( obj ) {
+			return $.type( obj ) === "function";
+		},
+		isArray: Array.isArray || function( obj ) {
+			return $.type( obj ) === "array";
+		},
+		isWindow: function( obj ) {
+			return obj != null && obj == obj.window;
+		},
+		isPlainObject: function( obj ) {//纯粹对象 即是通过{}或者new Object()方式创建的对象　　删除多余代码自己确保是纯粹对象
+			// 必须是Object.
+			//　确保不是　DOM nodes and window objects
+			if ( !obj || $.type( obj ) !== "object" || obj.nodeType || $.isWindow( obj ) ) {
+				return false;
+			}
+			return true;
 		},
 		// Support: Android<4.1, IE<9
 		trim : function ( text ) {
@@ -231,6 +266,71 @@ $=$j=(function(){
 	};
 	$.fn.init.prototype = $.fn;
 
+	$.extend = $.fn.extend = function() {
+		var src, copyIsArray, copy, name, options, clone,
+			target = arguments[ 0 ] || {},
+			i = 1,//从哪里开始合并
+			length = arguments.length,
+			deep = false;
+
+		// 是否深度复制
+		if ( typeof target === "boolean" ) {
+			deep = target;
+
+			// skip the boolean and the target
+			target = arguments[ i ] || {};
+			i++;
+		}
+
+		// Handle case when target is a string or something (possible in deep copy)
+		if ( typeof target !== "object" && !$.isFunction( target ) ) {
+			target = {};
+		}
+
+		// extend $ itself 只有一个参数
+		if ( i === length ) {
+			target = this;
+			i--;
+		}
+
+		for ( ; i < length; i++ ) {
+			// Only deal with non-null/undefined values
+			if ( ( options = arguments[ i ] ) != null ) {
+				// Extend the base object
+				for ( name in options ) {
+					src = target[ name ];
+					copy = options[ name ];
+
+					// Prevent never-ending loop
+					if ( target === copy ) {
+						continue;
+					}
+
+					// Recurse if we're merging plain objects or arrays
+					if ( deep && copy && ( $.isPlainObject( copy ) ||
+						( copyIsArray = $.isArray( copy ) ) ) ) {
+
+						if ( copyIsArray ) {
+							copyIsArray = false;
+							clone = src && $.isArray( src ) ? src : [];
+
+						} else {
+							clone = src && $.isPlainObject( src ) ? src : {};
+						}
+
+						// Never move original objects, clone them
+						target[ name ] = $.extend( deep, clone, copy );
+
+					} else if ( copy !== undefined ) {
+						target[ name ] = copy;
+					}
+				}
+			}
+		}
+
+		// Return the modified object
+		return target;
+	};
 
 	$.ajax = function (options) {
 		function empty() {}
@@ -254,8 +354,8 @@ $=$j=(function(){
 			error: empty, //错误信息回调
 			timeout: 10000 //请求超时ms
 		};
-		for(var i in options)if(options[i]===undefined)delete(options[i]);		
-		Object.assign(opt, options); //合并对象到opt,有的替换  es6标准   要换
+		$.extend(opt,options);//合并对象到opt,有的替换 没定义的不换
+		//Object.assign(opt, options); //es6标准
 		var abortTimeout = null;
 		var xhr = new XMLHttpRequest();
 		xhr.onreadystatechange = function () {
@@ -320,4 +420,4 @@ $=$j=(function(){
 		};
 	});
 	return $;
-})();
+}));

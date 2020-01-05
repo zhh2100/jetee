@@ -1,6 +1,7 @@
 module.exports = function(grunt){
     var pkg = grunt.file.readJSON('package.json'),
-        banner = '/*!\n * jetee <%= pkg.version %>\n * build: <%= new Date().toLocaleString() %>\n * http://www.ma863.com \n */\n';
+        Jetee="Jetee(requirejs,jquery)",
+        banner = '/*!\n * 简单易用加精简,功能仿,先用它做站，功能不够再原版替换\n * Released under the MIT license \n * Jetee version <%= pkg.version %>\n * build: <%= new Date().toLocaleString() %>\n * http://www.ma863.com \n */\n';
     // 1. 初始化插件配置
     grunt.initConfig({
         pkg:pkg,
@@ -8,33 +9,54 @@ module.exports = function(grunt){
         concat: {
             jquery:{
                 options: { //可选项配置
-                    banner: banner,
+                    banner: '',
                     separator: ';'   //使用;连接合并
                 },
-                src:  ["src/jquery/1.12.4/*.js"],  //合并哪些js文件
-                dest: "dist/jquery/1.12.4/jquery.js" //输出的js文件
+                src:  ["src/jquery/*.js"],  //合并哪些js文件
+                dest: "dist/<%= pkg.version %>/jquery/jquery.js" //输出的js文件
             },
-            js:{
+            requirejs:{
                 options: { //可选项配置
-                    banner: banner,
+                    banner: '',
                     separator: ';'   //使用;连接合并
                 },
-                src:  ["src/jquery/1.12.4/*.js","src/bootstrap/*.js"],  //合并哪些js文件
-                dest: "dist/jetee.js" //输出的js文件
+                src:  ["src/requirejs/require.js"],  //合并哪些js文件
+                dest: "dist/<%= pkg.version %>/requirejs/requirejs.js" //输出的js文件
             },
-            css:{
-                src:  ["src/jquery/1.12.4/css/*.css"],  //合并哪些js文件
-                dest: "dist/css/jetee.css" //输出的js文件
+            jetee:{
+                options: { //可选项配置
+                    banner: '',
+                    separator: ''   //使用;连接合并
+                },
+                src:  ["dist/<%= pkg.version %>/requirejs/requirejs.js","dist/<%= pkg.version %>/jquery/jquery.js",],  //合并哪些js文件
+                dest: "dist/<%= pkg.version %>/jetee.js" //输出的js文件
             }
         },
         uglify: {
             options: { //可选项配置
-                banner: banner
             },
-            my_target: {
+            requirejs: {
+                options: {
+                    banner: banner.replace('Jetee','requirejs')
+                },
                 files: {
-                    'dist/jetee.min.js': ['dist/jetee.js'],
-                    'dist/jquery/1.12.4/jquery.min.js': ['dist/jquery/1.12.4/jquery.js']
+                    'dist/<%= pkg.version %>/requirejs/requirejs.min.js': ['dist/<%= pkg.version %>/requirejs/requirejs.js']
+                }
+            },
+            jquery: {
+                options: {
+                    banner: banner.replace('Jetee','jquery')
+                },
+                files: {
+                    'dist/<%= pkg.version %>/jquery/jquery.min.js': ['dist/<%= pkg.version %>/jquery/jquery.js']
+                }
+            },
+            jetee: {
+                options: {
+                    banner: banner.replace('Jetee',Jetee)
+                },
+                files: {
+                    'dist/<%= pkg.version %>/jetee.min.js': ['dist/<%= pkg.version %>/jetee.js']
                 }
             }
         },
@@ -44,7 +66,7 @@ module.exports = function(grunt){
             },
             minify: {
                 files: {
-                    "dist/css/jetee.min.css": ['dist/css/*.css','!dist/css/*.min.css']
+                    "dist/<%= pkg.version %>/css/jetee.min.css": ['dist/<%= pkg.version %>/css/*.css','!dist/<%= pkg.version %>/css/*.min.css']
                 }
             }
         }
