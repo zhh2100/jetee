@@ -9,7 +9,10 @@
 (function(root){
 	var debug=true,
 		context = {
-		topModule:[], //存储require函数调用生成的顶层模块对象名。　　自定义的_@$1  _@$2   有几次require就是几
+		/*!
+		*存储require函数调用生成的顶层模块对象名。　　自定义的_@$1  _@$2   有几次require就是几
+		*/
+		topModule:[], 
 		modules:{}, //存储所有的模块。使用模块名作为key，模块对象作为value　　
 		waiting:[], //等待加载完成的模块
 		loaded:[] //加载好的模块   (加载好是指模块所在的文件加载成功)
