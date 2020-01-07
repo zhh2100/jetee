@@ -1,7 +1,7 @@
 module.exports = function(grunt){
 	var pkg = grunt.file.readJSON('package.json'),
 		configBridge = grunt.file.readJSON('./grunt/configBridge.json', { encoding: 'utf8' });
-		Jetee="Jetee(requirejs,jquery)",
+		Jetee="Jetee(requirejs,jquery,bootstrap)",
 		banner = '/*!\n * 简单易用加精简,功能仿,先用它做站，功能不够再原版替换\n * https://github.com/qqtxt/jetee\n * Released under the MIT license \n * Jetee version <%= pkg.version %>\n * build: <%= new Date().toLocaleString() %>\n * http://www.ma863.com \n */\n';
 	// 1. 初始化插件配置
 	grunt.initConfig({
@@ -10,73 +10,24 @@ module.exports = function(grunt){
 		clean: {
 			dist: 'dist/<%= pkg.version %>'
 		},
-		/*concat: {
-			requirejs:{
-				options: {
-					banner: banner.replace('Jetee','requirejs')
-				},
-				src:  ["src/requirejs/require.js"],  //合并哪些js文件
-				dest: "dist/<%= pkg.version %>/requirejs/requirejs.js" //输出的js文件
-			},
-			jquery:{
-				options: {
-					banner: banner.replace('Jetee','jquery')
-				},
-				src:  ["src/jquery/*.js"],  //合并哪些js文件
-				dest: "dist/<%= pkg.version %>/jquery/jquery.js" //输出的js文件
-			},
-			jetee:{
-				options: {
-					 banner: banner.replace('Jetee',Jetee)
-				},
-				src:  ["dist/<%= pkg.version %>/requirejs/requirejs.js","dist/<%= pkg.version %>/jquery/jquery.js",],  //合并哪些js文件
-				dest: "dist/<%= pkg.version %>/jetee.js" //输出的js文件
-			}
-		},*/
 		jshint: {
-		  options: {
-			jshintrc: 'src/bootstrap/js/.jshintrc'
-		  },
-		  grunt: {
 			options: {
-			  jshintrc: 'grunt/.jshintrc'
+				jshintrc: 'src/bootstrap/js/.jshintrc'
 			},
-			src: ['Gruntfile.js']
-		  },
-		  core: {
-			src: 'src/bootstrap/js/*.js'
-		  }		  
+			core: {
+				src: 'src/bootstrap/js/*.js'
+			}		  
 		},
 		jscs: {
-		  options: {
-			config: 'src/bootstrap/js/.jscsrc'
-		  }		
+			options: {
+				config: 'src/bootstrap/js/.jscsrc'
+			},
+			core: {
+				src: '<%= jshint.core.src %>'
+			},  	
 		},
-		/*concat: {
-		  options: {
-			banner: banner.replace('Jetee','bootstrap'),
-			stripBanners: true
-		  },
-		  bootstrap: {
-			src: [
-				'js/transition.js',
-				'js/alert.js',
-				'js/button.js',
-				'js/carousel.js',
-				'js/collapse.js',
-				'js/dropdown.js',
-				'js/modal.js',
-				'js/tooltip.js',
-				'js/popover.js',
-				'js/scrollspy.js',
-				'js/tab.js',
-				'js/affix.js'
-			],
-			dest: 'dist/<%= pkg.version %>/bootstrap/js/bootstrap.js'
-		  }
-		},*/
 		uglify: {
-			concat: {
+			myconcat: {
 				options: {
 					mangle:false,
 					compress: false,
@@ -84,9 +35,9 @@ module.exports = function(grunt){
 					banner: banner.replace('Jetee',Jetee)
 				},
 				files: {
-					'dist/<%= pkg.version %>/requirejs/requirejs.js': ['src/requirejs/requirejs.js'],
+					'dist/<%= pkg.version %>/requirejs/require.js': ['src/requirejs/require.js'],
 					'dist/<%= pkg.version %>/jquery/jquery.js': ['src/jquery/jquery.js'],
-					'dist/<%= pkg.version %>/jquery/bootstrap.js': [
+					'dist/<%= pkg.version %>/bootstrap/bootstrap.js': [
 																	'src/bootstrap/js/transition.js',
 																	'src/bootstrap/js/alert.js',
 																	'src/bootstrap/js/button.js',
@@ -94,21 +45,21 @@ module.exports = function(grunt){
 																	'src/bootstrap/js/collapse.js',
 																	'src/bootstrap/js/dropdown.js',
 																	'src/bootstrap/js/modal.js',
-																	'src/bootstrap/js/tooltip.js',
+																	//'src/bootstrap/js/tooltip.js',
 																	'src/bootstrap/js/popover.js',
 																	'src/bootstrap/js/scrollspy.js',
 																	'src/bootstrap/js/tab.js',
 																	'src/bootstrap/js/affix.js'
 																],
-					'dist/<%= pkg.version %>/jetee.js': ['src/requirejs/requirejs.js','src/jquery/jquery.js']
+					'dist/<%= pkg.version %>/jetee.js': ['src/requirejs/require.js','src/jquery/jquery.js']
 				}
-			}        	
+			},    	
 			requirejs: {
 				options: {
 					banner: banner.replace('Jetee','requirejs')
 				},
 				files: {
-					'dist/<%= pkg.version %>/requirejs/requirejs.min.js': ['src/requirejs/requirejs.js']
+					'dist/<%= pkg.version %>/requirejs/require.min.js': ['src/requirejs/require.js']
 				}
 			},
 			jquery: {
@@ -124,7 +75,7 @@ module.exports = function(grunt){
 					banner: banner.replace('Jetee','bootstrap')
 				},
 				files: {
-					'dist/<%= pkg.version %>/bootstrap/bootstrap.min.js': ['dist/<%= pkg.version %>/jquery/bootstrap.js']
+					'dist/<%= pkg.version %>/bootstrap/bootstrap.min.js': ['dist/<%= pkg.version %>/bootstrap/bootstrap.js']
 				}
 			},		
 			jetee: {
@@ -132,7 +83,7 @@ module.exports = function(grunt){
 					banner: banner.replace('Jetee',Jetee)
 				},
 				files: {
-					'dist/<%= pkg.version %>/jetee.min.js': ['src/requirejs/requirejs.js','src/jquery/jquery.js']
+					'dist/<%= pkg.version %>/jetee.min.js': ['src/requirejs/require.js','src/jquery/jquery.js']
 				}
 			}
 		},
