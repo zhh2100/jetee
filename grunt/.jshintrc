@@ -1,0 +1,7 @@
+{
+  "extends" : "../src/bootstrap/js/.jscsrc",
+  "asi"     : false,
+  "browser" : false,
+  "es3"     : false,
+  "node"    : true
+}
