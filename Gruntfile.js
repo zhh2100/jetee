@@ -37,7 +37,7 @@ module.exports = function(grunt){
 				files: {
 					'dist/<%= pkg.version %>/requirejs/require.js': ['src/requirejs/require.js'],
 					'dist/<%= pkg.version %>/jquery/jquery.js': ['src/jquery/jquery.js'],
-					'dist/<%= pkg.version %>/bootstrap/bootstrap.js': [
+					'dist/<%= pkg.version %>/bootstrap/js/bootstrap.js': [
 																	'src/bootstrap/js/transition.js',
 																	//'src/bootstrap/js/alert.js',
 																	'src/bootstrap/js/button.js',
@@ -51,7 +51,7 @@ module.exports = function(grunt){
 																	//'src/bootstrap/js/tab.js',
 																	'src/bootstrap/js/affix.js'
 																],
-					'dist/<%= pkg.version %>/bootstrap/bootstrap_few.js': [																	
+					'dist/<%= pkg.version %>/bootstrap/js/bootstrap_few.js': [																	
 																	'src/bootstrap/js/alert.js',
 																	'src/bootstrap/js/dropdown.js',
 																	'src/bootstrap/js/tooltip.js',
@@ -71,7 +71,7 @@ module.exports = function(grunt){
 					footer:"\n});"
 				},
 				files: {
-					'dist/<%= pkg.version %>/jetee.js': ['dist/<%= pkg.version %>/bootstrap/bootstrap.js']
+					'dist/<%= pkg.version %>/jetee.js': ['dist/<%= pkg.version %>/bootstrap/js/bootstrap.js']
 				}
 			},
 			concat_all:{
@@ -106,8 +106,8 @@ module.exports = function(grunt){
 					banner: banner.replace('Jetee','bootstrap')
 				},
 				files: {
-					'dist/<%= pkg.version %>/bootstrap/bootstrap.min.js': ['dist/<%= pkg.version %>/bootstrap/bootstrap.js'],
-					'dist/<%= pkg.version %>/bootstrap/bootstrap_few.min.js': ['dist/<%= pkg.version %>/bootstrap/bootstrap_few.js']
+					'dist/<%= pkg.version %>/bootstrap/js/bootstrap.min.js': ['dist/<%= pkg.version %>/bootstrap/js/bootstrap.js'],
+					'dist/<%= pkg.version %>/bootstrap/js/bootstrap_few.min.js': ['dist/<%= pkg.version %>/bootstrap/js/bootstrap_few.js']
 				}
 			},		
 			jetee: {
