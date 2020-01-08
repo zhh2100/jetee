@@ -39,21 +39,52 @@ module.exports = function(grunt){
 					'dist/<%= pkg.version %>/jquery/jquery.js': ['src/jquery/jquery.js'],
 					'dist/<%= pkg.version %>/bootstrap/bootstrap.js': [
 																	'src/bootstrap/js/transition.js',
-																	'src/bootstrap/js/alert.js',
+																	//'src/bootstrap/js/alert.js',
 																	'src/bootstrap/js/button.js',
 																	'src/bootstrap/js/carousel.js',
 																	'src/bootstrap/js/collapse.js',
-																	'src/bootstrap/js/dropdown.js',
+																	//'src/bootstrap/js/dropdown.js',
 																	'src/bootstrap/js/modal.js',
 																	//'src/bootstrap/js/tooltip.js',
-																	'src/bootstrap/js/popover.js',
+																	//'src/bootstrap/js/popover.js',
 																	'src/bootstrap/js/scrollspy.js',
-																	'src/bootstrap/js/tab.js',
+																	//'src/bootstrap/js/tab.js',
 																	'src/bootstrap/js/affix.js'
 																],
-					'dist/<%= pkg.version %>/jetee.js': ['src/requirejs/require.js','src/jquery/jquery.js']
+					'dist/<%= pkg.version %>/bootstrap/bootstrap_few.js': [																	
+																	'src/bootstrap/js/alert.js',
+																	'src/bootstrap/js/dropdown.js',
+																	'src/bootstrap/js/tooltip.js',
+																	'src/bootstrap/js/popover.js',
+																	'src/bootstrap/js/tab.js',
+																],																
+					//'dist/<%= pkg.version %>/jetee.js': ['src/requirejs/require.js','src/jquery/jquery.js']
 				}
-			},    	
+			},
+			//bootstrap  require进来
+			concat_bootstrap:{
+				options: {
+					mangle:false,
+					compress: false,
+					beautify:true,
+					banner: "require(['jquery'],function(jQuery){",
+					footer:"\n});"
+				},
+				files: {
+					'dist/<%= pkg.version %>/jetee.js': ['dist/<%= pkg.version %>/bootstrap/bootstrap.js']
+				}
+			},
+			concat_all:{
+				options: {
+					mangle:false,
+					compress: false,
+					beautify:true,
+					banner: banner.replace('Jetee',Jetee)
+				},
+				files: {
+					'dist/<%= pkg.version %>/jetee.js': ['src/requirejs/require.js','src/jquery/jquery.js','dist/<%= pkg.version %>/jetee.js']
+				}
+			},
 			requirejs: {
 				options: {
 					banner: banner.replace('Jetee','requirejs')
@@ -75,7 +106,8 @@ module.exports = function(grunt){
 					banner: banner.replace('Jetee','bootstrap')
 				},
 				files: {
-					'dist/<%= pkg.version %>/bootstrap/bootstrap.min.js': ['dist/<%= pkg.version %>/bootstrap/bootstrap.js']
+					'dist/<%= pkg.version %>/bootstrap/bootstrap.min.js': ['dist/<%= pkg.version %>/bootstrap/bootstrap.js'],
+					'dist/<%= pkg.version %>/bootstrap/bootstrap_few.min.js': ['dist/<%= pkg.version %>/bootstrap/bootstrap_few.js']
 				}
 			},		
 			jetee: {
@@ -83,7 +115,7 @@ module.exports = function(grunt){
 					banner: banner.replace('Jetee',Jetee)
 				},
 				files: {
-					'dist/<%= pkg.version %>/jetee.min.js': ['src/requirejs/require.js','src/jquery/jquery.js']
+					'dist/<%= pkg.version %>/jetee.min.js': ['dist/<%= pkg.version %>/jetee.js']
 				}
 			}
 		},
@@ -102,20 +134,31 @@ module.exports = function(grunt){
 				src: 'src/bootstrap/less/bootstrap.less',
 				dest: 'dist/<%= pkg.version %>/bootstrap/css/bootstrap.css'
 			},
+			bootstrap_few: {
+				options: {
+					sourceMapURL: 'bootstrap_few.css.map',
+					sourceMapFilename: 'dist/<%= pkg.version %>/bootstrap/css/bootstrap_few.css.map'
+				},
+				src: 'src/bootstrap/less/bootstrap_few.less',
+				dest: 'dist/<%= pkg.version %>/bootstrap/css/bootstrap_few.css'
+			}
 		},
 		postcss: {
-		  options: {
-			map: {
-			  inline: false,
-			  sourcesContent: true
+			options: {
+				map: {
+					inline: false,
+					sourcesContent: true
+				},
+				processors: [
+					require('autoprefixer')(configBridge.config.autoprefixer)
+				]
 			},
-			processors: [
-			  require('autoprefixer')(configBridge.config.autoprefixer)
-			]
-		  },
-		  core: {
-			src: 'dist/<%= pkg.version %>/bootstrap/css/bootstrap.css'
-		  }
+			bootstrap: {
+				src: 'dist/<%= pkg.version %>/bootstrap/css/bootstrap.css'
+			},
+			bootstrap_few: {
+				src: 'dist/<%= pkg.version %>/bootstrap/css/bootstrap_few.css'
+			}
 		},
 		stylelint: {
 		  options: {
@@ -139,16 +182,27 @@ module.exports = function(grunt){
 			},
 			minify: {
 				files: {
-					"dist/<%= pkg.version %>/bootstrap/css/bootstrap.min.css": ['dist/<%= pkg.version %>/bootstrap/css/bootstrap.css','!dist/<%= pkg.version %>/bootstrap/css/*.min.css']
+					"dist/<%= pkg.version %>/bootstrap/css/bootstrap.min.css": ['dist/<%= pkg.version %>/bootstrap/css/bootstrap.css'],
+					"dist/<%= pkg.version %>/bootstrap/css/bootstrap_few.min.css": ['dist/<%= pkg.version %>/bootstrap/css/bootstrap_few.css']
 				}
 			}
+		},
+		copy: {
+			fonts: {
+				expand: true,
+				cwd: 'src/bootstrap/fonts/',
+				src: '*',
+				dest: 'dist/<%= pkg.version %>/bootstrap/fonts'
+			}
 		}
+
 	});
 
 	// 2. 加载插件任务
 	require('load-grunt-tasks')(grunt, { scope: 'devDependencies' });
 	// 3. 注册构建任务
-	grunt.registerTask('default', ['clean','jshint','jscs','uglify','less','postcss','cssmin']);
-	grunt.registerTask('bootstrap', ['clean','less','postcss','cssmin']);
+	grunt.registerTask('default', ['clean','jshint','jscs','uglify','less','postcss','cssmin','copy']);
+	//只建bootstrap css 字体复制
+	grunt.registerTask('bootstrap', ['clean','less','postcss','cssmin','copy']);
 	grunt.registerTask('stylelint', ['stylelint']);
 };

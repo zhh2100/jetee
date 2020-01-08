@@ -1,30 +1,7 @@
 {
-  "paths": {
-    "customizerJs": [
-      "../assets/js/vendor/autoprefixer.js",
-      "../assets/js/vendor/less.min.js",
-      "../assets/js/vendor/jszip.min.js",
-      "../assets/js/vendor/uglify.min.js",
-      "../assets/js/vendor/Blob.js",
-      "../assets/js/vendor/FileSaver.js",
-      "../assets/js/raw-files.min.js",
-      "../assets/js/src/customizer.js"
-    ],
-    "docsJs": [
-      "../assets/js/vendor/requestAnimationFrame-polyfill.js",
-      "../assets/js/vendor/base64.js",
-      "../assets/js/vendor/holder.min.js",
-      "../assets/js/vendor/clipboard.min.js",
-      "../assets/js/vendor/anchor.min.js",
-      "../assets/js/src/application.js",
-      "../assets/js/src/search.js",
-      "../assets/js/ie10-viewport-bug-workaround.js",
-      "../assets/js/ie-emulation-modes-warning.js"
-    ]
-  },
   "config": {
     "autoprefixer": {
-      "browsers": [
+      "overrideBrowserslist": [
         "Android 2.3",
         "Android >= 4",
         "Chrome >= 20",
