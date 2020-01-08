@@ -8,7 +8,8 @@ jquery 1.12.4   功能还有待补充
 requireJs 2.3.6  
 bootstrap v3.4.1   js是21k,css69k,bootstrap工程量太大，就算重写相信也精简不了太多(意义不大)，直接用官方的保留最常用功能，不常用分开打包css与js  
 # 长期目标  
-vue  
+vue
+....
 
-
+贴个Q群 834611125
  
