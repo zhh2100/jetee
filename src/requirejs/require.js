@@ -215,10 +215,11 @@
 		context.topModule.push(name);
 		//剔除数组重复项
 		dep = unique(dep);
+		dep=trimArrExt(dep);
 		//context.modules._@$1 = {moduleName:"_@$1",deps:["a","b"],callback:null,callbackReturn:null,args:null}
 		createModule({//就是放入　context.modules
 			moduleName:name,
-			deps:trimArrExt(dep),//格式化数组去掉.js  ［'jquery.js','vue.js'］变成['jquery','vue']
+			deps:dep,//格式化数组去掉.js  ［'jquery.js','vue.js'］变成['jquery','vue']
 			callback:callback
 		});
 		//dep=['module1','module2']  加载多个模块
@@ -248,11 +249,12 @@
 		
 		//剔除数组重复项
 		dep = unique(dep);
-
+		name=trimExt(name);
+		dep=trimArrExt(dep);
 		//创建一个临时模块，在onload完成后修改它
 		createModule({
 			moduleName:name,
-			deps:trimArrExt(dep),
+			deps:dep,
 			callback:callback
 		});
 
